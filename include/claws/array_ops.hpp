@@ -175,7 +175,7 @@ namespace claws
   /// \brief struct to allow to speciailize on the retrned array's size
   /// \tparam count the size of the array `operator()` will return
   ///
-  template<unsigned int count>
+  template<size_t count>
   struct array_initializer
   {
   private:
