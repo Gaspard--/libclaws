@@ -169,21 +169,24 @@ namespace claws
     SCALAR_ARRAY_OPERATOR_DEF(<<);
     SCALAR_ARRAY_OPERATOR_DEF(>>);
   }
-
-  namespace impl
-  {
-    template<class Func, class T, std::size_t count, std::size_t... indices>
-    std::array<T, count> init_array(Func functor, std::index_sequence<indices...>)
-    {
-      return std::array<T, count>{(indices, functor())...};
-    }
-  }
+  /// @}
 
   /// \brief initialises each element of the array with the given functor
-  template<class Func, class T, std::size_t count>
-  std::array<T, count> init_array(Func functor)
+  template<unsigned int count>
+  struct array_initializer
   {
-    return impl::init_array(functor, std::make_index_sequence<count>{});
-  }
-  /// @}
+  private:
+    template<class Func, size_t... indices>
+    constexpr auto init_array(Func &&functor, std::index_sequence<indices...>) const
+    {
+      return std::array{(static_cast<void>(indices), functor())...};
+    }
+
+  public:
+    template<class Func>
+    constexpr auto operator()(Func &&functor) const noexcept(noexcept(functor()))
+    {
+      return init_array(std::forward<Func>(functor), std::make_index_sequence<count>{});
+    }
+  };
 }
