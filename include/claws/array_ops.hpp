@@ -171,7 +171,10 @@ namespace claws
   }
   /// @}
 
-  /// \brief initialises each element of the array with the given functor
+  ///
+  /// \brief struct to allow to speciailize on the retrned array's size
+  /// \tparam count the size of the array `operator()` will return
+  ///
   template<unsigned int count>
   struct array_initializer
   {
@@ -183,6 +186,9 @@ namespace claws
     }
 
   public:
+    /// \brief returns an array of size `count` initialized by calls to `functor`
+    ///
+    /// \param functor called to initialize each element in the returned array
     template<class Func>
     constexpr auto operator()(Func &&functor) const noexcept(noexcept(functor()))
     {
