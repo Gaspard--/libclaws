@@ -178,7 +178,7 @@ namespace claws
     {
       return std::array{(static_cast<void>(indices), functor())...};
     }
-  };
+  }
 
   /// \brief returns an array of size `size` initialized by calls to `functor`
   ///
