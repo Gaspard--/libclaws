@@ -171,28 +171,22 @@ namespace claws
   }
   /// @}
 
-  ///
-  /// \brief struct to allow to speciailize on the retrned array's size
-  /// \tparam count the size of the array `operator()` will return
-  ///
-  template<size_t count>
-  struct array_initializer
+  namespace impl
   {
-  private:
-    template<class Func, size_t... indices>
-    constexpr auto init_array(Func &&functor, std::index_sequence<indices...>) const
+    template<size_t size, class Func, size_t... indices>
+    constexpr auto init_array(Func &&functor, std::index_sequence<indices...>)
     {
       return std::array{(static_cast<void>(indices), functor())...};
     }
-
-  public:
-    /// \brief returns an array of size `count` initialized by calls to `functor`
-    ///
-    /// \param functor called to initialize each element in the returned array
-    template<class Func>
-    constexpr auto operator()(Func &&functor) const noexcept(noexcept(functor()))
-    {
-      return init_array(std::forward<Func>(functor), std::make_index_sequence<count>{});
-    }
   };
+
+  /// \brief returns an array of size `size` initialized by calls to `functor`
+  ///
+  /// \tparam size number of elements in the returned array
+  /// \param functor called to initialize each element in the returned array
+  template<size_t size, class Func>
+  constexpr auto init_array(Func &&functor) noexcept(noexcept(functor()))
+  {
+    return impl::init_array<size>(std::forward<Func>(functor), std::make_index_sequence<size>{});
+  }
 }
