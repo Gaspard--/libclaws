@@ -1,6 +1,5 @@
 include(GoogleTest)
 
-###################### INTERNAL ####################################
 macro(__internal_specific_unit_test_platform_configuration EXECUTABLE_NAME)
     if (CLANG)
         set_target_properties(${EXECUTABLE_NAME} PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS} -Wno-global-constructors")
@@ -18,7 +17,6 @@ macro(__internal_specific_unit_test_properties EXECUTABLE_NAME)
             RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin"
             RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin")
 endmacro()
-###################### INTERNAL ####################################
 
 macro(CREATE_UNIT_TEST EXECUTABLE_NAME PREFIX_NAME SOURCES)
     add_executable(${EXECUTABLE_NAME} ${SOURCES})
